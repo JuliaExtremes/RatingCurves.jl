@@ -1,0 +1,16 @@
+name = "RatingCurves"
+uuid = "e9e3b3e0-5095-4984-97e8-7ac0126a89f0"
+authors = ["Jonathan Jalbert"]
+version = "0.1.0"
+
+[deps]
+Optim = "429524aa-4258-5aef-a3af-852621145aeb"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
