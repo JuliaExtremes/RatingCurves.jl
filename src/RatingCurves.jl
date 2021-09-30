@@ -7,6 +7,9 @@ include("structures.jl")
 export 
 
 # Datatype
-Gauging
+Gauging,
+
+level,
+discharge
 
 end

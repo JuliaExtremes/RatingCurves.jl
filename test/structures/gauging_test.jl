@@ -15,4 +15,29 @@
     @test typeof(G.level) == Float64
     @test typeof(G.discharge) == Float64
 
+    # Test the broadcast
+    G = Gauging.([1,2],[3,4])
+    @test G[2].level ≈ 2
+    @test G[2].discharge ≈ 4
+
+end
+
+@testset "Gauging methods" begin
+
+    # Test `level()`for a single gauging
+    G = Gauging(0.0,1.0)
+    @test level(G) ≈ 0.0
+    
+    # Test the broadcasting of `level()`
+    G = Gauging.([0.0,1.0],[2.0,3.0])
+    @test level.(G) ≈ [0.0, 1.0]
+
+    # Test `discharge()`for a single gauging
+    G = Gauging(0.0,1.0)
+    @test discharge(G) ≈ 1.0
+    
+    # Test the broadcasting of `discharge()`
+    G = Gauging.([0.0,1.0],[2.0,3.0])
+    @test discharge.(G) ≈ [2.0, 3.0]
+
 end

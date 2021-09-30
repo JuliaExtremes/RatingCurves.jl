@@ -14,3 +14,21 @@ Gauging(level::Integer, discharge::Integer,) = Gauging(float(level), float(disch
 Gauging() = Gauging(0.0, 0.0)
 
 Base.Broadcast.broadcastable(obj::Gauging) = Ref(obj)
+
+"""
+    level(G::Gauging)
+
+Return the level of gauging `G`
+"""
+function level(G::Gauging)
+    return G.level
+end
+
+"""
+    discharge(G::Gauging)
+
+Return the discharge of gauging `G`
+"""
+function discharge(G::Gauging)
+    return G.discharge
+end
