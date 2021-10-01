@@ -41,3 +41,15 @@ end
     @test discharge.(G) ≈ [2.0, 3.0]
 
 end
+
+@testset "getinitialvalues" begin
+
+    G = Gauging.([1,2,3], [4,5,6])
+    rc = RatingCurves.getinitialvalues(G)
+
+    @test rc.a ≈ 126.4911 atol = 1e-4
+    @test rc.b ≈ .9
+    @test rc.c ≈ 13/2
+
+end
+
