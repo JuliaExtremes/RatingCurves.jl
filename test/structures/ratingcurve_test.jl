@@ -26,6 +26,11 @@ end
     @test discharge(rc, 3) ≈ 12.0
 end
 
+@testset "level" begin
+    rc = RatingCurve(Gauging[], 3, 1, 2)
+    @test level(rc, 12) ≈ 3.0
+end
+
 @testset "logdischarge" begin
     rc = RatingCurve(Gauging[], 3, 1, 2)
     @test logdischarge(rc, 3) ≈ log(12)

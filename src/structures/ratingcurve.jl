@@ -33,6 +33,21 @@ function discharge(rc::RatingCurve, h::Real)
 end
 
 """
+    level(rc::RatingCurve, q::Real)
+
+Estimate the level corresponding to the discharge `q` with the rating curve `rc`.
+"""
+function level(rc::RatingCurve, q::Real)
+    
+    @assert q>0
+    
+    h = rc.b + (q/rc.a)^(1/rc.c)
+    
+    return h
+    
+end
+
+"""
     logdischarge(rc::RatingCurve, h::Real)
 
 Compute the log of the estimated discharge at level `h` with the rating curve `rc`.
