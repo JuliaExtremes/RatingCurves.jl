@@ -60,6 +60,7 @@ function level(G::Gauging)
     return G.level
 end
 
+
 """
     rcfit(G::Vector{Gauging})
 
