@@ -20,3 +20,13 @@
     @test typeof(rc.a) == Float64
 
 end
+
+@testset "discharge" begin
+    rc = RatingCurve(Gauging[], 3, 1, 2)
+    @test discharge(rc, 3) ≈ 12.0
+end
+
+@testset "logdischarge" begin
+    rc = RatingCurve(Gauging[], 3, 1, 2)
+    @test logdischarge(rc, 3) ≈ log(12)
+end

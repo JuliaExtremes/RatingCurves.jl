@@ -19,6 +19,36 @@ RatingCurve() = RatingCurve(Gauging[], 0.0, 0.0, 0.0)
 Base.Broadcast.broadcastable(obj::RatingCurve) = Ref(obj)
 
 
+"""
+    discharge(rc::RatingCurve, h::Real)
+
+Compute the estimated discharge at level `h` with the rating curve `rc`.
+"""
+function discharge(rc::RatingCurve, h::Real)
+    
+    y = logdischarge(rc, h)
+    
+    return exp(y)
+    
+end
+
+"""
+    logdischarge(rc::RatingCurve, h::Real)
+
+Compute the log of the estimated discharge at level `h` with the rating curve `rc`.
+"""
+function logdischarge(rc::RatingCurve, h::Real)
+    
+    if (h>rc.b) & (rc.a>0) 
+        y = log(rc.a) + rc.c*log(h-rc.b)
+    else
+        y = -Inf
+    end
+    
+    return y
+    
+end
+
 
 
 """
