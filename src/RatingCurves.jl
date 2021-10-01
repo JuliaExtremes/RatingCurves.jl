@@ -12,6 +12,7 @@ RatingCurve,
 CompoundRatingCurve,
 
 level,
-discharge
+discharge,
+logdischarge
 
 end
