@@ -19,6 +19,37 @@ CompoundRatingCurve(threshold::Vector{<:Int}, component::Vector{RatingCurve}) = 
 
 Base.Broadcast.broadcastable(obj::CompoundRatingCurve) = Ref(obj)
 
+
+"""
+    discharge(crc::RatingCurve, h::Real)
+
+Compute the estimated discharge at level `h` with the compound rating curve `crc`.
+"""
+function discharge(crc::CompoundRatingCurve, h::Real)
+    
+    y = logdischarge(crc, h)
+    
+    return exp(y)
+    
+end
+
+"""
+    logdischarge(crc::RatingCurve, h::Real)
+
+Compute the estimated log discharge at level `h` with the compound rating curve `crc`.
+"""
+function logdischarge(crc::CompoundRatingCurve, h::Real)
+    
+    threshold = vcat(crc.threshold, Inf)
+    
+    ind = findfirst(h .<= threshold)
+    
+    y = logdischarge(crc.component[ind], h)
+    
+    return y
+    
+end
+
 """
     Base.show(io::IO, obj::EVA)
 Override of the show function for the objects of type RatingCurve.

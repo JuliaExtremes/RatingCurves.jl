@@ -18,3 +18,19 @@
     @test_throws ErrorException CompoundRatingCurve([4.5, 5], [rc₁, rc₂])
 
 end
+
+@testset "discharge with compound rating curve" begin
+    rc₁ = RatingCurve(Gauging[], 1, 0, 3)
+    rc₂ = RatingCurve(Gauging[], 3, 1, 2)
+    crc = CompoundRatingCurve([1], [rc₁, rc₂])
+    @test discharge(crc,1) ≈ 1.0
+    @test discharge(crc,2) ≈ 3.0
+end
+
+@testset "logdischarge with compound rating curve" begin
+    rc₁ = RatingCurve(Gauging[], 1, 0, 3)
+    rc₂ = RatingCurve(Gauging[], 3, 1, 2)
+    crc = CompoundRatingCurve([1], [rc₁, rc₂])
+    @test logdischarge(crc,1) ≈ 0
+    @test logdischarge(crc,2) ≈ log(3)
+end
