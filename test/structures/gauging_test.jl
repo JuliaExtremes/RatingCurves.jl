@@ -49,7 +49,7 @@ end
 
     @test rc.a ≈ 126.4911 atol = 1e-4
     @test rc.b ≈ .9
-    @test rc.c ≈ 13/2
+    @test rc.c ≈ 3/2
 
 end
 
