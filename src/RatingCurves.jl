@@ -3,6 +3,7 @@ module RatingCurves
 using Optim
 
 include("structures.jl")
+include("parameterestimation.jl")
 
 export 
 
