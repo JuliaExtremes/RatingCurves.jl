@@ -53,3 +53,35 @@ end
 
 end
 
+@testset "rcfit with given b" begin
+    G = Gauging.([2,3,4],[3,12,27])
+    rc = rcfit(G, 1)
+    @test rc.a ≈ 3.0
+    @test rc.b ≈ 1.0
+    @test rc.c ≈ 2.0
+end
+
+@testset "rcfit" begin
+    G = Gauging.([2,3,4],[3,12,27])
+    rc = rcfit(G)
+    @test rc.a ≈ 3.0
+    @test rc.b ≈ 1.0
+    @test rc.c ≈ 2.0
+end
+
+@testset "rcfit with given b s.t. constraint" begin
+    G = Gauging.([2,3,4],[3,12,27])
+    rc = rcfit(G, 1, [5, 48])
+    @test rc.a ≈ 3.0
+    @test rc.b ≈ 1.0
+    @test rc.c ≈ 2.0
+end
+
+@testset "rcfit s.t. constraint" begin
+    G = Gauging.([2,3,4],[3,12,27])
+    rc = rcfit(G, [5, 48])
+    @test rc.a ≈ 3.0
+    @test rc.b ≈ 1.0
+    @test rc.c ≈ 2.0
+end
+

@@ -13,6 +13,7 @@ CompoundRatingCurve,
 
 level,
 discharge,
-logdischarge
+logdischarge,
+rcfit
 
 end

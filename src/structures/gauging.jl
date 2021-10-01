@@ -59,3 +59,115 @@ Return the level of gauging `G`
 function level(G::Gauging)
     return G.level
 end
+
+"""
+    rcfit(G::Vector{Gauging})
+
+Fit the rating curve to the gaugings `G`.
+"""
+function rcfit(G::Vector{Gauging})
+    
+    h = level.(G)
+    q = discharge.(G)
+    
+    rc₀ = RatingCurves.getinitialvalues(G)
+    
+    y = log.(q)   
+    
+    fobj(b) = sum( (y - logdischarge.(rcfit(G,b[]), h)).^2 )
+
+    res = optimize(fobj, [-Inf], [.99*minimum(h)], [rc₀.b])
+    b = Optim.minimizer(res)[]
+    
+    rc = rcfit(G, b)
+    
+    return rc
+    
+end
+
+"""
+    rcfit(G::Vector{Gauging}, b::Real)
+
+Fit the rating curve of parameter `b` to the gaugings `G`.
+"""
+function rcfit(G::Vector{Gauging}, b::Real)
+     
+    h = level.(G)
+    q = discharge.(G)
+    
+    @assert b < minimum(h) 
+    
+    x = log.(h .- b)
+    y = log.(q)
+    
+    X = hcat(ones(length(x)), x)
+    
+    β̂ = X\y
+    
+    c = β̂[2]
+    
+    a = exp(β̂[1])
+    
+    rc = RatingCurve(G, a, b, c)
+    
+    return rc
+    
+end
+
+"""
+    rcfit(G::Vector{Gauging}, constraint::AbstractVector{<:Real})
+
+Fit the rating curve to the gaugings `G` passing through the point (h,q) specified in `constraint`.
+"""
+function rcfit(G::Vector{Gauging}, constraint::AbstractVector{<:Real})
+    
+    h = level.(G)
+    q = discharge.(G)
+    
+    y = log.(q)
+    
+    rc₀ = RatingCurves.getinitialvalues(G)
+    
+    fobj(b) = sum( (y - logdischarge.(rcfit(G,b[],constraint), h)).^2 )
+
+    res = optimize(fobj, [-Inf], [.99*minimum(h)], [rc₀.b])
+    b = Optim.minimizer(res)[]
+    
+    rc = rcfit(G, b, constraint)
+    
+    return rc
+    
+end
+
+"""
+    rcfit(G::Vector{Gauging}, b::Real, constraint::AbstractVector{<:Real})
+
+Fit the rating curve with parameter `b` to the gaugings `G` passing through the point (h,q) specified in `constraint`.
+"""
+function rcfit(G::Vector{Gauging}, b::Real, constraint::AbstractVector{<:Real})
+   
+    h = level.(G)
+    q = discharge.(G)
+    
+    @assert b < minimum(h) 
+    
+    h̃ = constraint[1]
+    q̃ = constraint[2]
+    
+    x̃ = log(h̃ - b)
+    ỹ = log(q̃)
+    
+    x = log.(h .- b)
+    y = log.(q)
+    
+    z = x .- x̃
+    
+    c = z\(y .- ỹ)
+    
+    a = exp(ỹ - x̃*c)
+    
+    rc = RatingCurve(G, a, b, c)
+    
+    return rc   
+    
+end
