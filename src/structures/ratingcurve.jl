@@ -31,13 +31,13 @@ function Base.show(io::IO, obj::RatingCurve)
 
 end
 
-function showRatingCurve(io::IO, obj::RatingCurve)
+function showRatingCurve(io::IO, obj::RatingCurve, prefix::String = "")
 
-    println(io, "RatingCurve")
-    println(io, "   ", "data: ", typeof(obj.gauging), "[", length(obj.gauging), "]")
-    println(io, "   ", "Parameters:")
-    println(io, "      ", "a = ", obj.a)
-    println(io, "      ", "b = ", obj.b)
-    println(io, "      ", "c = ", obj.c)
+    println(io, prefix, "RatingCurve")
+    println(io, prefix ,"   ", "data: ", typeof(obj.gauging), "[", length(obj.gauging), "]")
+    println(io, prefix, "   ", "Parameters:")
+    println(io, prefix, "      ", "a = ", obj.a)
+    println(io, prefix, "      ", "b = ", obj.b)
+    println(io, prefix, "      ", "c = ", obj.c)
 
 end

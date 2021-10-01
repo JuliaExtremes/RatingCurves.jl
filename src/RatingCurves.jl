@@ -9,6 +9,7 @@ export
 # Datatype
 Gauging,
 RatingCurve,
+CompoundRatingCurve,
 
 level,
 discharge
