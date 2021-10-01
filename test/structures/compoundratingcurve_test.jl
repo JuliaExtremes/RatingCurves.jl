@@ -27,6 +27,15 @@ end
     @test discharge(crc,2) ≈ 3.0
 end
 
+@testset "level with compound rating curve" begin
+    rc₁ = RatingCurve(Gauging[], 1, 0, 3)
+    rc₂ = RatingCurve(Gauging[], 3, 1, 2)
+    crc = CompoundRatingCurve([1], [rc₁, rc₂])
+    @test level(crc,1) ≈ 1.0
+    @test level(crc,1/8) ≈ 1/2
+    @test level(crc,12) ≈ 3
+end
+
 @testset "logdischarge with compound rating curve" begin
     rc₁ = RatingCurve(Gauging[], 1, 0, 3)
     rc₂ = RatingCurve(Gauging[], 3, 1, 2)

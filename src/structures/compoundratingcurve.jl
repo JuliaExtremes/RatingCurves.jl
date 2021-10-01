@@ -34,6 +34,30 @@ function discharge(crc::CompoundRatingCurve, h::Real)
 end
 
 """
+    level(crc::RatingCurve, q::Real)
+
+Compute the level corresponding the the discharge `q` and the compound rating curve `crc`.
+"""
+function level(crc::CompoundRatingCurve, q::Real)
+    
+    @assert q>0
+    
+    threshold = push!(crc.threshold, Inf)
+    component = crc.component
+    
+    i = 1
+    h = level(component[i], q)
+    
+    while(h > threshold[i])
+        i +=1
+        h = level(component[i], q)
+    end
+    
+    return h
+    
+end
+
+"""
     logdischarge(crc::RatingCurve, h::Real)
 
 Compute the estimated log discharge at level `h` with the compound rating curve `crc`.
