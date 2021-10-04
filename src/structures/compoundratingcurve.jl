@@ -42,7 +42,7 @@ function level(crc::CompoundRatingCurve, q::Real)
     
     @assert q>0
     
-    threshold = push!(crc.threshold, Inf)
+    threshold = vcat(crc.threshold, Inf)
     component = crc.component
     
     i = 1
@@ -66,7 +66,7 @@ function logdischarge(crc::CompoundRatingCurve, h::Real)
     
     threshold = vcat(crc.threshold, Inf)
     
-    ind = findfirst(h .<= threshold)
+    ind = findfirst(h .< threshold)
     
     y = logdischarge(crc.component[ind], h)
     
@@ -90,7 +90,7 @@ function showCompoundRatingCurve(io::IO, obj::CompoundRatingCurve)
     println(io, "CompoundRatingCurve")
     for i in 1:length(obj.component)
         println(io, "")
-        println(io, "   for ",threshold[i]," < h ≤ ",threshold[i+1])
+        println(io, "   for ",threshold[i]," ≤ h < ",threshold[i+1])
         showRatingCurve(io, obj.component[i],"      ")
     end
 end
