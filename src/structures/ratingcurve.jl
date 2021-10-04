@@ -86,3 +86,23 @@ function showRatingCurve(io::IO, obj::RatingCurve, prefix::String = "")
     println(io, prefix, "      ", "c = ", obj.c)
 
 end
+
+"""
+    sse(rc::RatingCurve)
+
+Compute the sum of the squares of residuals between the curve and the gauging in the log space.
+"""
+function sse(rc::RatingCurve)
+    
+    h = level.(rc.gauging)
+    q = discharge.(rc.gauging)
+    
+    y = log.(q)
+    
+    ŷ = logdischarge.(rc, h)
+    
+    SSE = sum((y - ŷ).^2)
+    
+    return [SSE]
+
+end

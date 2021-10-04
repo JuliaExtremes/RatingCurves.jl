@@ -35,3 +35,13 @@ end
     rc = RatingCurve(Gauging[], 3, 1, 2)
     @test logdischarge(rc, 3) ≈ log(12)
 end
+
+@testset "sse of a RatingCurve" begin
+    G = Gauging.([2,3,4],[8, 18, 32])
+    rc = rcfit(G)
+    
+    SSE = RatingCurves.sse(rc)[]
+        
+    @test SSE ≈ 0.0 atol=sqrt(eps())
+    
+end

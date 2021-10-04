@@ -94,3 +94,23 @@ function showCompoundRatingCurve(io::IO, obj::CompoundRatingCurve)
         showRatingCurve(io, obj.component[i],"      ")
     end
 end
+
+"""
+    sse(rc::RatingCurve)
+
+Compute the sum of the squares of residuals between the compound curve and the gauging in the log space.
+
+### Details
+A value of the sum of squares is given for each CompoundRatingCurve component.
+"""
+function sse(crc::CompoundRatingCurve)
+    
+    SSE = Float64[]
+    
+    for rc in crc.component
+        push!(SSE, sse(rc)[])
+    end
+    
+    return SSE
+
+end

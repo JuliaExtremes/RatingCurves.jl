@@ -44,3 +44,14 @@ end
     @test logdischarge(crc,1/2) ≈ log(1/8)
     @test logdischarge(crc,2) ≈ log(3)
 end
+
+@testset "sse of a CompoundRatingCruver" begin
+    G = Gauging.([1/4, 1/3, 1/2, 2,3,4],[1/32, 2/27, 1/4, 8, 18, 32])
+    crc = crcfit(G)
+    
+    SSE = RatingCurves.sse(crc)
+    
+    @test (SSE[1]) ≈ 0.0 atol=sqrt(eps())
+    @test SSE[2] ≈ 0.0 atol=sqrt(eps())
+    
+end
