@@ -42,6 +42,42 @@ end
 
 end
 
+@testset "crcfit" begin
+    G = Gauging.([1/4, 1/3, 1/2, 2,3,4],[1/32, 2/27, 1/4, 8, 18, 32])
+    crc = crcfit(G)
+    
+    rc₁ = crc.component[1]
+    rc₂ = crc.component[2]
+    
+    @test crc.threshold[] ≈ 1.0
+    
+    @test rc₁.a ≈ 2.0
+    @test rc₁.b ≈ 0.0 atol=1e-8
+    @test rc₁.c ≈ 3.0
+    
+    @test rc₂.a ≈ 2.0
+    @test rc₂.b ≈ 0.0 atol=1e-8
+    @test rc₂.c ≈ 2.0
+end
+
+@testset "crcfit with given k" begin
+    G = Gauging.([1/4, 1/3, 1/2, 2,3,4],[1/32, 2/27, 1/4, 8, 18, 32])
+    crc = crcfit(G, 1)
+    
+    rc₁ = crc.component[1]
+    rc₂ = crc.component[2]
+    
+    @test crc.threshold[] ≈ 1.0
+    
+    @test rc₁.a ≈ 2.0
+    @test rc₁.b ≈ 0.0 atol=1e-8
+    @test rc₁.c ≈ 3.0
+    
+    @test rc₂.a ≈ 2.0
+    @test rc₂.b ≈ 0.0 atol=1e-8
+    @test rc₂.c ≈ 2.0
+end
+
 @testset "getinitialvalues" begin
 
     G = Gauging.([1,2,3], [4,5,6])

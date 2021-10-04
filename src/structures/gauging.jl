@@ -15,6 +15,65 @@ Gauging() = Gauging(0.0, 0.0)
 
 Base.Broadcast.broadcastable(obj::Gauging) = Ref(obj)
 
+
+
+"""
+    crcfit(G::Vector{Gauging})
+
+Fit the compound rating curve corresponding to the gaugings `G`
+"""
+function crcfit(G::Vector{Gauging})
+    
+    h = level.(G)
+    q = discharge.(G) 
+    
+    hs = sort(unique(h))
+    
+    fobj(k) = sum( (log.(q) - logdischarge.(crcfit(G,k), h)).^2 )
+    res = optimize(fobj, hs[3], hs[end-2])
+    k = Optim.minimizer(res)
+    
+    crc = crcfit(G, k)
+    
+    return crc
+    
+end
+
+"""
+    crcfit(G::Vector{Gauging},k::Real)
+
+Fit the compound rating curve corresponding to the gaugings `G` using the break-point `k`.
+
+### Details
+
+At least 3 gaugings are necessary by component of the compound rating curve.
+"""
+function crcfit(G::Vector{Gauging}, k::Real)
+   
+    h = level.(G)
+    q = discharge.(G)
+    
+    ind = h.>k
+    
+    h2 = h[ind]
+    q2 = q[ind]
+    G₂ = G[ind]
+    
+    h1 = h[.!(ind)]
+    q1 = q[.!(ind)]
+    G₁ = G[.!(ind)]
+    
+    rc₂ = rcfit(G₂)
+    
+    # Continuity constraint at h = k
+    rc₁ = rcfit(G₁, [k, discharge(rc₂, k)])
+    
+    crc = CompoundRatingCurve([k], [rc₁, rc₂] )
+    
+    return crc
+    
+end
+
 """
     discharge(G::Gauging)
 
