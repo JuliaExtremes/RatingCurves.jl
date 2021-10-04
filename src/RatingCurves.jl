@@ -12,6 +12,7 @@ Gauging,
 RatingCurve,
 CompoundRatingCurve,
 
+crcfit,
 level,
 discharge,
 logdischarge,
