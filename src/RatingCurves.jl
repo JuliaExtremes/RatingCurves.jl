@@ -1,6 +1,8 @@
 module RatingCurves
 
-using Optim
+using Optim, Statistics
+
+import Statistics.var
 
 include("structures.jl")
 include("parameterestimation.jl")

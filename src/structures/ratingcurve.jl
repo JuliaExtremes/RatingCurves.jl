@@ -106,3 +106,21 @@ function sse(rc::RatingCurve)
     return [SSE]
 
 end
+
+"""
+    var(rc::RatingCurve)
+
+Estimate the variance of the errors in the log space.
+"""
+function var(rc::RatingCurve)
+   
+    n = length(rc.gauging)
+    p = 3
+    
+    SSE = RatingCurves.sse(rc)
+    
+    σ̂² = SSE./(n-p)
+    
+    return σ̂²
+    
+end

@@ -55,3 +55,26 @@ end
     @test SSE[2] ≈ 0.0 atol=sqrt(eps())
     
 end
+
+@testset "var of RatingCurve" begin
+    param = RatingCurve(Gauging[], 2, 0, 3)
+    
+    h = range(1, stop=2, length=10)
+
+    Random.seed!(1234)
+    y = logdischarge.(param, h) + .01*randn(10)
+
+    q = exp.(y)
+
+    G = Gauging.(h, q)
+    
+    rc = RatingCurve(G, 2,0,3)
+    
+    crc = CompoundRatingCurve([1], [rc, rc])
+    
+    σ̂² = RatingCurves.var(crc)
+    
+    @test σ̂²[1] ≈ 0.00013060186244030195 atol=sqrt(eps())
+    @test σ̂²[2] ≈ 0.00013060186244030195 atol=sqrt(eps())
+    
+end

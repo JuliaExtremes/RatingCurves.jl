@@ -114,3 +114,20 @@ function sse(crc::CompoundRatingCurve)
     return SSE
 
 end
+
+"""
+    var(crc::CompoundRatingCurve)
+
+Estimate the variance of the errors in the log space.
+"""
+function var(crc::CompoundRatingCurve)
+   
+    σ̂² = Float64[]
+    
+    for rc in crc.component
+        push!(σ̂², RatingCurves.var(rc)[])
+    end
+    
+    return σ̂²
+    
+end

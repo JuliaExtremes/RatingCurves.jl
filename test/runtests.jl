@@ -1,5 +1,5 @@
 using RatingCurves
-using Test
+using Random, Test
 
 @testset "RatingCurves.jl" begin
     include("structures_test.jl")
