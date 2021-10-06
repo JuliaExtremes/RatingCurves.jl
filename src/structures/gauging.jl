@@ -16,6 +16,28 @@ Gauging() = Gauging(0.0, 0.0)
 Base.Broadcast.broadcastable(obj::Gauging) = Ref(obj)
 
 
+"""
+    bootstrap(G::Vector{Gauging})
+
+Resample the gauging for bootstrap.
+
+### Details
+
+Sampling with replacement is performed to compose a gauging sample of the same size. 
+The smallest gauging is always selected so that the rating curve is valid over the entire gauged range.
+"""
+function bootstrap(G::Vector{Gauging})
+    
+    n = length(G)
+    
+    G_bootstrap = sample(G, n-1, replace=true)
+    
+    pushfirst!(G_bootstrap, minimum(G))
+    
+    return G_bootstrap
+    
+end
+
 
 """
     crcfit(G::Vector{Gauging})
@@ -117,6 +139,31 @@ Return the level of gauging `G`
 """
 function level(G::Gauging)
     return G.level
+end
+
+"""
+    minimum(G::Vector{Gauging})
+
+Return the gauging with the smallest level.
+"""
+function minimum(G::Vector{Gauging})
+    
+    ind = argmin(level.(G))
+    
+    return G[ind]
+end
+
+
+"""
+    maximum(G::Vector{Gauging})
+
+Return the gauging with the highest level.
+"""
+function maximum(G::Vector{Gauging})
+    
+    ind = argmax(level.(G))
+    
+    return G[ind]
 end
 
 
@@ -229,5 +276,24 @@ function rcfit(G::Vector{Gauging}, b::Real, constraint::AbstractVector{<:Real})
     rc = RatingCurve(G, a, b, c)
     
     return rc   
+    
+end
+
+"""
+    sort(G::Vector{Gauging}; rev::Bool=false)
+
+Sort the gauging according to the level.
+
+### Details
+
+Sort in ascending order if `rev=false` (option by default) and in descendinf order if `rev=true`.
+"""
+function sort(G::Vector{Gauging}; rev::Bool=false)
+   
+    h = level.(G)
+    
+    Gs = G[sortperm(h, rev=rev)]
+    
+    return Gs
     
 end

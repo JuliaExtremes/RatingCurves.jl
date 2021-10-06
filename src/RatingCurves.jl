@@ -2,7 +2,7 @@ module RatingCurves
 
 using Distributions, Optim, Random, Statistics, StatsBase
 
-import Statistics.var
+import Base.sort, Base.minimum, Base.maximum, Statistics.var, StatsBase.bic
 
 include("structures.jl")
 include("parameterestimation.jl")
@@ -18,6 +18,9 @@ crcfit,
 level,
 discharge,
 logdischarge,
-rcfit
+minimum,
+maximum,
+rcfit,
+sort
 
 end

@@ -42,6 +42,16 @@ end
 
 end
 
+@testset "bootstrap Gauging" begin
+    G = Gauging.(1:3, 1:3)
+
+    Gbs = RatingCurves.bootstrap(G)
+    
+    @test minimum(G) ∈ Gbs
+    @test length(G) == length(Gbs)
+    
+end
+
 @testset "crcfit" begin
     G = Gauging.([1/4, 1/3, 1/2, 2,3,4],[1/32, 2/27, 1/4, 8, 18, 32])
     crc = crcfit(G)
@@ -89,6 +99,22 @@ end
 
 end
 
+@testset "minimum of Gauging" begin
+    G = Gauging.(1:3, 1:3)
+
+    @test minimum(G).level ≈ 1.0
+    @test minimum(G).discharge ≈ 1.0
+    
+end
+
+@testset "maximum of Gauging" begin
+    G = Gauging.(1:3, 1:3)
+
+    @test maximum(G).level ≈ 3.0
+    @test maximum(G).discharge ≈ 3.0
+    
+end
+
 @testset "rcfit with given b" begin
     G = Gauging.([2,3,4],[3,12,27])
     rc = rcfit(G, 1)
@@ -121,3 +147,13 @@ end
     @test rc.c ≈ 2.0
 end
 
+@testset "sort Gauging" begin
+    G = Gauging.(1:3, 1:3)
+
+    G_ascend = sort(G)
+    @test level.(G_ascend) ≈ [1, 2, 3]
+    
+    G_descend = sort(G, rev=true)
+    @test level.(G_descend) ≈ [3, 2, 1]
+    
+end
