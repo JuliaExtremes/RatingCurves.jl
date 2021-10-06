@@ -19,6 +19,10 @@
 
 end
 
+@testset "cint CompoundRatingCurve" begin
+    #TODO
+end
+
 @testset "discharge with compound rating curve" begin
     rc₁ = RatingCurve(Gauging[], 1, 0, 3)
     rc₂ = RatingCurve(Gauging[], 3, 1, 2)

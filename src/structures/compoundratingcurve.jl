@@ -21,6 +21,55 @@ Base.Broadcast.broadcastable(obj::CompoundRatingCurve) = Ref(obj)
 
 
 """
+    cint(crc::CompoundRatingCurve; nboot::Int=100, α::Real=.05)
+
+Compound rating curve parameter confidence intervals of level `1-α` obtained by a bootstrap sample of size `nboot`.
+"""
+function cint(crc::CompoundRatingCurve; nboot::Int=200, α::Real=.05)
+    
+    k = Vector{Float64}(undef, nboot)
+    
+    a₁ = Vector{Float64}(undef, nboot)
+    b₁ = Vector{Float64}(undef, nboot)
+    c₁ = Vector{Float64}(undef, nboot)
+    
+    a₂ = Vector{Float64}(undef, nboot)
+    b₂ = Vector{Float64}(undef, nboot)
+    c₂ = Vector{Float64}(undef, nboot)
+    
+    for i in 1:nboot
+       
+        G₁ = RatingCurves.bootstrap(crc.component[1].gauging)
+        G₂ = RatingCurves.bootstrap(crc.component[2].gauging)
+        crcᵢ = crcfit([G₁..., G₂...])
+        
+        k[i] = crcᵢ.threshold[1]
+        
+        a₁[i] = crcᵢ.component[1].a
+        b₁[i] = crcᵢ.component[1].b
+        c₁[i] = crcᵢ.component[1].c
+        
+        a₂[i] = crcᵢ.component[2].a
+        b₂[i] = crcᵢ.component[2].b
+        c₂[i] = crcᵢ.component[2].c
+        
+    end
+    
+    M = hcat(
+            quantile(k, [α/2, 1-α/2]),
+            quantile(a₁, [α/2, 1-α/2]),
+            quantile(b₁, [α/2, 1-α/2]),
+            quantile(c₁, [α/2, 1-α/2]),
+            quantile(a₂, [α/2, 1-α/2]),
+            quantile(b₂, [α/2, 1-α/2]),
+            quantile(c₂, [α/2, 1-α/2])
+            )
+    
+    return M
+    
+end
+
+"""
     discharge(crc::RatingCurve, h::Real)
 
 Compute the estimated discharge at level `h` with the compound rating curve `crc`.

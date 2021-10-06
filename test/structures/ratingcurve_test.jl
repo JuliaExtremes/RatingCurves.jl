@@ -21,6 +21,10 @@
 
 end
 
+@testset "cint RatingCurve" begin
+    #TODO
+end
+
 @testset "discharge" begin
     rc = RatingCurve(Gauging[], 3, 1, 2)
     @test discharge(rc, 3) ≈ 12.0

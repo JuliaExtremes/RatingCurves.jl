@@ -20,6 +20,38 @@ Base.Broadcast.broadcastable(obj::RatingCurve) = Ref(obj)
 
 
 """
+    cint(rc::RatingCurve; nboot::Int=1000, α::Real=.05)
+
+Rating curve parameter confidence intervals of level `1-α` obtained by a bootstrap sample of size `nboot`.
+"""
+function cint(rc::RatingCurve; nboot::Int=1000, α::Real=.05)
+    
+    a = Vector{Float64}(undef, nboot)
+    b = Vector{Float64}(undef, nboot)
+    c = Vector{Float64}(undef, nboot)
+    
+    for i in 1:nboot
+       
+        Gᵢ = RatingCurves.bootstrap(rc.gauging)
+        rcᵢ = rcfit(Gᵢ)
+        
+        a[i] = rcᵢ.a
+        b[i] = rcᵢ.b
+        c[i] = rcᵢ.c
+        
+    end
+    
+    M = hcat(
+            quantile(a, [α/2, 1-α/2]),
+            quantile(b, [α/2, 1-α/2]),
+            quantile(c, [α/2, 1-α/2])
+            )
+    
+    return M
+    
+end
+
+"""
     discharge(rc::RatingCurve, h::Real)
 
 Compute the estimated discharge at level `h` with the rating curve `rc`.

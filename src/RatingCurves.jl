@@ -14,6 +14,7 @@ Gauging,
 RatingCurve,
 CompoundRatingCurve,
 
+cint,
 crcfit,
 level,
 discharge,
