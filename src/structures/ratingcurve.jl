@@ -96,6 +96,52 @@ function logdischarge(rc::RatingCurve, h::Real)
     
 end
 
+"""
+    pint(rc::RatingCurve, level::Real, α::Real=0.05, rtol::Real=.05)
+
+`1-α` Confidence interval of the estimated discharge at level `h` with the rating curve `rc`.
+
+### Details
+
+`rtol` represents the relative uncertainty of the dishcarge so that the true discharge is included in the interval `q ± 1.96*rtol` 95% of the time.
+"""
+function pint(rc::RatingCurve, level::Real, α::Real=0.05, rtol::Real=.05)
+    
+    res = pintlog(rc, level, α, rtol)
+    
+    return exp.(res)
+    
+end
+
+"""
+    pintlog(rc::RatingCurve, level::Real, α::Real=0.05, rtol::Real=.05)
+
+`1-α` confidence interval of the estimated log discharge at level `h` with the rating curve `rc`.
+
+### Details
+
+`rtol` represents the relative uncertainty of the dishcarge so that the true discharge is included in the interval `q ± 1.96*rtol` 95% of the time
+"""
+function pintlog(rc::RatingCurve, level::Real, α::Real=0.05, rtol::Real=.05)
+    
+    @assert 0<α<1
+    @assert 0<rtol<1
+    @assert level>rc.b
+    
+    # Rating curve error in log space
+    σ̂² = RatingCurves.var(rc)[]
+    
+    # Relative discharge error in log space
+    τ² = (rtol/1.96)^2
+    
+    pd = Normal(logdischarge(rc, level), sqrt(σ̂² + τ²))
+    
+    lower = quantile(pd, α/2)
+    upper = quantile(pd, 1-α/2)
+    
+    return [lower, upper]
+    
+end
 
 
 """

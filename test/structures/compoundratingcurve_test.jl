@@ -49,6 +49,14 @@ end
     @test logdischarge(crc,2) ≈ log(3)
 end
 
+@testset "pint CompoundRatingCurve" begin
+    #TODO
+end
+
+@testset "pintlog CompoundRatingCurve" begin
+    #TODO
+end
+
 @testset "sse of a CompoundRatingCruver" begin
     G = Gauging.([1/4, 1/3, 1/2, 2,3,4],[1/32, 2/27, 1/4, 8, 18, 32])
     crc = crcfit(G)

@@ -124,6 +124,45 @@ function logdischarge(crc::CompoundRatingCurve, h::Real)
 end
 
 """
+    pint(crc::CompoundRatingCurve, level::Real, α::Real=0.05, rtol::Real=.05)
+
+`1-α` confidence interval of the estimated discharge at level `h` with the compound rating curve `crc`.
+
+### Details
+
+`rtol` represents the relative uncertainty of the dishcarge so that the true discharge is included in the interval `q ± 1.96*rtol` 95% of the time
+"""
+function pint(crc::CompoundRatingCurve, level::Real, α::Real=0.05, rtol::Real=.05)
+    
+    res = pintlog(crc, level, α, rtol)
+    
+    return exp.(res)
+end
+
+
+
+"""
+    pintlog(crc::CompoundRatingCurve, level::Real, α::Real=0.05, rtol::Real=.05)
+
+`1-α` confidence interval of the estimated log discharge at level `h` with the compound rating curve `crc`.
+
+### Details
+
+`rtol` represents the relative uncertainty of the dishcarge so that the true discharge is included in the interval `q ± 1.96*rtol` 95% of the time
+"""
+function pintlog(crc::CompoundRatingCurve, level::Real, α::Real=0.05, rtol::Real=.05)
+    
+    threshold = vcat(crc.threshold, Inf)
+    
+    ind = findfirst(level .< threshold)
+    
+    rc = crc.component[ind]
+    
+    return pintlog(rc, level, α, rtol)
+    
+end
+
+"""
     Base.show(io::IO, obj::EVA)
 Override of the show function for the objects of type RatingCurve.
 """

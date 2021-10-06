@@ -40,6 +40,14 @@ end
     @test logdischarge(rc, 3) ≈ log(12)
 end
 
+@testset "pint RatingCurve" begin
+    #TODO
+end
+
+@testset "pintlog RatingCurve" begin
+    #TODO
+end
+
 @testset "sse of a RatingCurve" begin
     G = Gauging.([2,3,4],[8, 18, 32])
     rc = rcfit(G)

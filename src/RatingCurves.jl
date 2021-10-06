@@ -21,6 +21,8 @@ discharge,
 logdischarge,
 minimum,
 maximum,
+pint,
+pintlog,
 rcfit,
 sort
 
