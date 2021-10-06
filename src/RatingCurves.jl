@@ -14,6 +14,7 @@ Gauging,
 RatingCurve,
 CompoundRatingCurve,
 
+bic,
 cint,
 crcfit,
 level,

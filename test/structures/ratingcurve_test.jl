@@ -21,6 +21,10 @@
 
 end
 
+@testset "bic RatingCurve" begin
+    #TODO
+end
+
 @testset "cint RatingCurve" begin
     #TODO
 end

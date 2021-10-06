@@ -18,6 +18,23 @@ RatingCurve() = RatingCurve(Gauging[], 0.0, 0.0, 0.0)
 
 Base.Broadcast.broadcastable(obj::RatingCurve) = Ref(obj)
 
+"""
+    function bic(rc::RatingCurve)
+
+BIC of the rating curve model.
+"""
+function bic(rc::RatingCurve)
+   
+    n = length(rc.gauging)
+    p = 3
+    
+    @assert n>3 
+    
+    σ̂² = RatingCurves.var(rc)
+    
+    return n*log(σ̂²[]) + p*log(n)
+    
+end
 
 """
     cint(rc::RatingCurve; nboot::Int=1000, α::Real=.05)

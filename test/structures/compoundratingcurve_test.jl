@@ -19,6 +19,10 @@
 
 end
 
+@testset "bic CompoundRatingCurve" begin
+    #TODO
+end
+
 @testset "cint CompoundRatingCurve" begin
     #TODO
 end

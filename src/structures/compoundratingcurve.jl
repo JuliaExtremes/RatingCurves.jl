@@ -19,6 +19,25 @@ CompoundRatingCurve(threshold::Vector{<:Int}, component::Vector{RatingCurve}) = 
 
 Base.Broadcast.broadcastable(obj::CompoundRatingCurve) = Ref(obj)
 
+"""
+    function bic(crc::CompoundRatingCurve)
+
+BIC of the compound rating curve model.
+"""
+function bic(crc::CompoundRatingCurve)
+   
+    n₁ = length(crc.component[1].gauging)
+    n₂ = length(crc.component[2].gauging)
+    n = n₁ + n₂
+    p = 6
+    
+    @assert n>6 
+    
+    σ̂² = RatingCurves.var(crc)
+    
+    return n₁*log(σ̂²[1]) + n₂*log(σ̂²[2]) + p*log(n)
+    
+end
 
 """
     cint(crc::CompoundRatingCurve; nboot::Int=100, α::Real=.05)
