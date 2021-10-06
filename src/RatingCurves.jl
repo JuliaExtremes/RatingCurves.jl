@@ -1,6 +1,6 @@
 module RatingCurves
 
-using Optim, Random, Statistics
+using Distributions, Optim, Random, Statistics, StatsBase
 
 import Statistics.var
 
