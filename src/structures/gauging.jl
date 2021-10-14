@@ -52,7 +52,7 @@ function crcfit(G::Vector{Gauging})
     hs = sort(unique(h))
     
     fobj(k) = sum( (log.(q) - logdischarge.(crcfit(G,k), h)).^2 )
-    res = optimize(fobj, hs[3], hs[end-2])
+    res = optimize(fobj, 1.02*hs[3], .98*hs[end-2])
     k = Optim.minimizer(res)
     
     crc = crcfit(G, k)
