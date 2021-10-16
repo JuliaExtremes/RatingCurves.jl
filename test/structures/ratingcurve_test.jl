@@ -53,31 +53,30 @@ end
 end
 
 @testset "sse of a RatingCurve" begin
-    G = Gauging.([2,3,4],[8, 18, 32])
-    rc = rcfit(G)
-    
+
+    h = exp.([1/5, 1/4, 1/2, 1/2]) # First three points on the curve
+    q = exp.([8/5, 7/4, 5/2, 3])
+
+    G = Gauging.(h,q)
+
+    rc = RatingCurve(G, exp(1), 0, 3)
+
     SSE = RatingCurves.sse(rc)[]
-        
-    @test SSE ≈ 0.0 atol=sqrt(eps())
+
+    @test SSE ≈ 1/4 atol=sqrt(eps())
     
 end
 
 @testset "var of RatingCurve" begin
-    param = RatingCurve(Gauging[], 2, 0, 3)
-    
-    h = range(1, stop=2, length=10)
+    h = exp.([1/5, 1/4, 1/2, 1/2]) # First three points on the curve
+    q = exp.([8/5, 7/4, 5/2, 3])
 
-    Random.seed!(1234)
-    y = logdischarge.(param, h) + .01*randn(10)
+    G = Gauging.(h,q)
 
-    q = exp.(y)
-
-    G = Gauging.(h, q)
-    
-    rc = RatingCurve(G, 2,0,3)
+    rc = RatingCurve(G, exp(1), 0, 3)
     
     σ̂² = RatingCurves.var(rc)[]
     
-    @test σ̂² ≈ 0.00013060186244030195 atol=1e-5
+    @test σ̂² ≈ 1/4 atol=sqrt(eps())
     
 end

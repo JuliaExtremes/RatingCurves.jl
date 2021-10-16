@@ -62,35 +62,50 @@ end
 end
 
 @testset "sse of a CompoundRatingCruver" begin
-    G = Gauging.([1/4, 1/3, 1/2, 2,3,4],[1/32, 2/27, 1/4, 8, 18, 32])
-    crc = crcfit(G)
-    
+    h₁ = exp.([1/5, 1/4, 1/2, 1/2])
+    q₁ = exp.([8/5, 7/4, 5/2, 3])
+
+    G₁ = Gauging.(h₁, q₁)
+
+    rc₁ = RatingCurve(G₁, exp(1), 0, 3)
+
+    h₂ = exp.([1, 3/2, 2, 2])
+    q₂ = exp.([5/2, 7/2, 9/2, 5])
+
+    G₂ = Gauging.(h₂, q₂)
+
+    rc₂ = RatingCurve(G₂, exp(1/2), 0, 2)
+
+    crc = CompoundRatingCurve([exp(3/4)], [rc₁, rc₂])
+
     SSE = RatingCurves.sse(crc)
-    
-    @test (SSE[1]) ≈ 0.0 atol=sqrt(eps())
-    @test SSE[2] ≈ 0.0 atol=sqrt(eps())
+
+    @test SSE[1] ≈ 1/4 atol=sqrt(eps())
+    @test SSE[2] ≈ 1/4 atol=sqrt(eps())
     
 end
 
+
 @testset "var of RatingCurve" begin
-    param = RatingCurve(Gauging[], 2, 0, 3)
-    
-    h = range(1, stop=2, length=10)
+    h₁ = exp.([1/5, 1/4, 1/2, 1/2])
+    q₁ = exp.([8/5, 7/4, 5/2, 3])
 
-    Random.seed!(1234)
-    y = logdischarge.(param, h) + .01*randn(10)
+    G₁ = Gauging.(h₁, q₁)
 
-    q = exp.(y)
+    rc₁ = RatingCurve(G₁, exp(1), 0, 3)
 
-    G = Gauging.(h, q)
-    
-    rc = RatingCurve(G, 2,0,3)
-    
-    crc = CompoundRatingCurve([1], [rc, rc])
+    h₂ = exp.([1, 3/2, 2, 2])
+    q₂ = exp.([5/2, 7/2, 9/2, 5])
+
+    G₂ = Gauging.(h₂, q₂)
+
+    rc₂ = RatingCurve(G₂, exp(1/2), 0, 2)
+
+    crc = CompoundRatingCurve([exp(3/4)], [rc₁, rc₂])
     
     σ̂² = RatingCurves.var(crc)
     
-    @test σ̂²[1] ≈ 0.00013060186244030195 atol=1e-5
-    @test σ̂²[2] ≈ 0.00013060186244030195 atol=1e-5
+    @test σ̂²[1] ≈ 1/4 atol=sqrt(eps())
+    @test σ̂²[2] ≈ 1/4 atol=sqrt(eps())
     
 end

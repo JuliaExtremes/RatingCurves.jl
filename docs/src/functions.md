@@ -1,5 +1,7 @@
 
-# Functions
+# Source code
+
+## Functions
 
 ```@autodocs
 Modules = [RatingCurves]
@@ -7,7 +9,7 @@ Private = false
 Order = [:function]
 ```
 
-# Types
+## Types
 
 ```@autodocs
 Modules = [RatingCurves]
