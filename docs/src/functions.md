@@ -2,7 +2,7 @@
 # Functions
 
 ```@autodocs
-Modules = [Extremes]
+Modules = [RatingCurves]
 Private = false
 Order = [:function]
 ```
@@ -10,7 +10,7 @@ Order = [:function]
 # Types
 
 ```@autodocs
-Modules = [Extremes]
+Modules = [RatingCurves]
 Private = false
 Order = [:type]
 ```
