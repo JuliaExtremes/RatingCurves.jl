@@ -67,7 +67,7 @@ end
     
     h = range(1, stop=2, length=10)
 
-    Random.seed!(1234)
+    Random.seed!(MersenneTwister(1234))
     y = logdischarge.(param, h) + .01*randn(10)
 
     q = exp.(y)
