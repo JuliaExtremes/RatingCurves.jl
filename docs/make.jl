@@ -14,6 +14,17 @@ makedocs(sitename = "RatingCurves.jl",
 
 )
 
-deploydocs(
-    repo = "github.com/JuliaExtremes/RatingCurves.jl.git",
-)
+if CI
+    deploydocs(
+    repo   = "github.com/JuliaExtremes/RatingCurves.jl.git",
+    devbranch = "dev",
+    versions = ["stable" => "v^", "v#.#"],
+    push_preview = false,
+    target = "build"
+    )
+end
+
+
+# deploydocs(
+#     repo = "github.com/JuliaExtremes/RatingCurves.jl.git",
+# )
