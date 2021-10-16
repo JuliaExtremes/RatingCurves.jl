@@ -8,7 +8,7 @@ using RatingCurves, DataFrames, Gadfly
 
 Loading the annual gaugings of the Sainte-Anne river:
 ```@example SainteAnne
-data = Extremes.dataset("50408")
+data = RatingCurves.dataset("50408")
 first(data,5)
 ```
 
@@ -27,3 +27,12 @@ q = data.Discharge[1]
 
 G = Gauging(h,q)    
 ```
+
+The level and the discharge of the gauging `G` can be retrieved with [`level`](@ref) and [`discharge`](@ref) methods respectively:
+```@example SainteAnne
+h = level(G)
+q = discharge(G)
+
+println(h,q)    
+```
+

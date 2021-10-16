@@ -10,5 +10,5 @@ Before executing this tutorial, make sure to have installed the following packag
 
 and import them using the following command:
  ```@repl
-using Extremes, Dates, DataFrames, Gadfly
+using Dates, DataFrames, Gadfly, RatingCurves
 ```
