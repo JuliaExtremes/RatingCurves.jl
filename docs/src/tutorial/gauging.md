@@ -1,4 +1,4 @@
-# Gauging type
+# Data
 
 ```@setup SainteAnne
 using RatingCurves, DataFrames, Gadfly
@@ -19,3 +19,11 @@ plot(data, x=:Level, y=:Discharge, Geom.point)
 ```
 
 ## Construct the Gauging type
+
+It is possible to construct a [`Gauging`](@ref) type with a level and discharge couple:
+```@example SainteAnne
+h = data.level[1]
+q = data.Discharge[1]
+
+G = Gauging(h,q)    
+```
