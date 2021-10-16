@@ -1,9 +1,10 @@
 module RatingCurves
 
-using Distributions, Optim, Random, Statistics, StatsBase
+using CSV, DataFrames, Distributions, Optim, Random, Statistics, StatsBase
 
 import Base.sort, Base.minimum, Base.maximum, Statistics.var, StatsBase.bic
 
+include("data.jl")
 include("structures.jl")
 include("parameterestimation.jl")
 
