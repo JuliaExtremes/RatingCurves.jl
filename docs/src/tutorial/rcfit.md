@@ -115,6 +115,19 @@ model = layer(x=h₀, y=q̂₀, Geom.line,
 plot(obs, model)
 ```
 
+## Fit quality assessment
+
+The BIC (Bayesian Information Criterion) is an index of the quality of the curve fit to the gaugings. Assuming that the errors are normally distributed in the log space, the BIC of the curve in log space can be obtained as follows:
+
+`` \operatorname{bic} = n \log \hat\sigma_e^2 + 3 \log n,``
+
+where ``n`` corresponds to the number of gaugings, ``\hat\sigma_e^2`` corresponds to the variance of the errors in the log space and the value 3 stands for the number of parameters.
+
+The BIC of a fitted rating curve can be obtaines with the function [`bic`](@ref):
+```@repl SainteAnne
+bic(rc)
+```
+
 ## Constrained rating curve fit
 
 The rating curve can also be fit to the gaugings by requiring the curve to pass through a particular point. The curve obtained is the one that minimizes the sum of the squared errors among the curves that pass through the given point.
@@ -161,3 +174,4 @@ model = layer(x=h₀, y=q̂₀, Geom.line,
 
 plot(obs, model)
 ```
+
