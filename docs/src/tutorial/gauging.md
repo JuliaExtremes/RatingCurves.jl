@@ -29,7 +29,7 @@ G = Gauging(h,q)
 ```
 
 The level and the discharge of the gauging `G` can be retrieved with [`level`](@ref) and [`discharge`](@ref) methods respectively:
-```@replSainteAnne
+```@repl SainteAnne
 h = level(G)
 q = discharge(G)
 ```
