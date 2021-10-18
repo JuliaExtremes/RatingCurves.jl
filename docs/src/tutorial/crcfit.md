@@ -84,11 +84,11 @@ println(string("c₂ ∈ [", res[1,7]," , ", res[2,7]," ]"))
 
 ## Discharge uncertainty
 
-The 95% confidence interval on the discharge estimation at $h_0 = 29$ can be obtained with [`pint`](@ref):
+The 95% confidence interval on the discharge estimation at $h_0 = 29$ can be obtained with [`pint(::CompoundRatingCurve, ::Real, ::Real, ::Real)`](@ref):
 ```@repl SainteAnne
 pint(crc, 29)
 ```
-For more details on how this uncerainty is estimated, see the description of [`pint`](@ref).
+For more details on how this uncertainty is estimated, see the description of [`pint(::RatingCurve, ::Real, ::Real, ::Real)`](@ref).
 
 The confidence interval for the whole level range of the rating curve can be plotted as follows:
 ```@example SainteAnne
@@ -114,3 +114,23 @@ model = layer(x=h₀, y=q̂₀, Geom.line,
 
 plot(obs, model)
 ```   
+
+## Fit quality assessment
+
+The BIC (Bayesian Information Criterion) is an index of the quality of the curve fit to the gaugings. Assuming that the errors are normally distributed in the log space for each segment, the BIC of the compund curve in the log space can be obtained as follows:
+
+`` \operatorname{bic} = n_1 \log \hat\sigma_{e1}^2 + n_2 \log \hat\sigma_{e2}^2+ 6 \log n,``
+
+where ``n_1`` and ``n_2`` correspond to the number of gaugings of the first and second segment respectively, ``\hat\sigma_{e1}^2`` and ``\hat\sigma_{e2}^2`` correspond to the variance of the errors in the log space for the first and second segment respectively, ``n`` corresponds to the total number of gauging and the value 6 stands for the number of parameters.
+
+The BIC of a fitted compound rating curve can be obtained with the function [`bic`](@ref):
+```@repl SainteAnne
+bic(crc)
+```
+
+## Compound rating curve fit with a known breakpoint
+
+If the breakpoint ``k`` is known by the investigator, the rating curves of the two segments can be fitted with [`crcfit`](@ref) by specifying the optional argument `k`. For example, let suppose that the breakpoint for the Sainte-Anne data is at ``k = 28``, then the compoud rating curve can be obtained as follows:
+```@repl SainteAnne
+crcfit(G, 28)
+```

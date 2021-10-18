@@ -88,7 +88,7 @@ The 95% confidence interval on the discharge estimation at $h_0 = 29$ can be obt
 ```@repl SainteAnne
 pint(rc, 29)
 ```
-For more details on how this uncerainty is estimated, see the description of [`pint`](@ref).
+For more details on how this uncertainty is estimated, see the description of [`pint`](@ref).
 
 The confidence interval for the whole level range of the rating curve can be plotted as follows:
 ```@example SainteAnne
@@ -123,7 +123,7 @@ The BIC (Bayesian Information Criterion) is an index of the quality of the curve
 
 where ``n`` corresponds to the number of gaugings, ``\hat\sigma_e^2`` corresponds to the variance of the errors in the log space and the value 3 stands for the number of parameters.
 
-The BIC of a fitted rating curve can be obtaines with the function [`bic`](@ref):
+The BIC of a fitted rating curve can be obtained with the function [`bic`](@ref):
 ```@repl SainteAnne
 bic(rc)
 ```

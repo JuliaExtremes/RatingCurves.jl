@@ -147,9 +147,10 @@ end
 
 `1-α` confidence interval of the estimated discharge at level `h` with the compound rating curve `crc`.
 
-### Details
+## Details
 
-`rtol` represents the relative uncertainty of the dishcarge so that the true discharge is included in the interval `q ± 1.96*rtol` 95% of the time
+For each segment of the compound rating curve, the confidence intervals are estimated separately. See [`pint(::RatingCurve, ::Real, ::Real, ::Real)`](@ref) 
+for the details for the estimation on each segment. 
 """
 function pint(crc::CompoundRatingCurve, level::Real, α::Real=0.05, rtol::Real=.05)
     
