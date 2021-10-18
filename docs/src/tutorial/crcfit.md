@@ -52,3 +52,65 @@ obs = layer(data, x=:Level, y=:Discharge, Geom.point)
 model = layer(h->discharge(crc, h), 26, 32, Theme(default_color=colorant"red"))
 plot(obs, model, Coord.cartesian(ymin=0, ymax=1000))
 ```
+
+## Discharge estimation
+
+With the fitted compound rating curve, the discharge estimation at the level $h_0 = 29$ can be ontained with [`discharge`](@ref):
+```@repl SainteAnne
+discharge(crc, 29)
+```
+
+It is also possible to estimate the level corresponding to the discharge $q = 340$ with [`level`](@ref):
+```@repl SainteAnne
+level(crc, 340)
+```
+
+## Parameter uncertainty
+
+The compound rating curve parameter uncertainty can be estimated by bootstrap with the function [`cint`](@ref). For the Sainte-Anne example, the 95% confidence intervals are estimated using 100 boostrap samples of the original gaugings:
+```@example SainteAnne
+res = cint(crc, nboot=100)
+println(string("k ∈ [", res[1,1]," , ", res[2,1]," ]"))
+println(string("a₁ ∈ [", res[1,2]," , ", res[2,2]," ]"))
+println(string("b₁ ∈ [", res[1,3]," , ", res[2,3]," ]"))
+println(string("c₁ ∈ [", res[1,4]," , ", res[2,4]," ]"))
+println(string("a₂ ∈ [", res[1,5]," , ", res[2,5]," ]"))
+println(string("b₂ ∈ [", res[1,6]," , ", res[2,6]," ]"))
+println(string("c₂ ∈ [", res[1,7]," , ", res[2,7]," ]"))
+```
+
+!!! note
+    In the bootstrap resampling procedure, the gauging with the minimum level is always selected to ensure that the bootstrap rating curves are always defined on the original gauging level range.
+
+## Discharge uncertainty
+
+The 95% confidence interval on the discharge estimation at $h_0 = 29$ can be obtained with [`pint`](@ref):
+```@repl SainteAnne
+pint(crc, 29)
+```
+For more details on how this uncerainty is estimated, see the description of [`pint`](@ref).
+
+The confidence interval for the whole level range of the rating curve can be plotted as follows:
+```@example SainteAnne
+h₀ = range(minimum(data.Level), stop=32, length=100)
+
+# Discharge estimation for each level 
+q̂₀ = discharge.(crc, h₀)
+
+# 95% confidence intervals of each discharge estimation
+res = pint.(crc, h₀)
+
+# Lower bound of interval
+qmin = getindex.(res,1)
+
+# Upper bound of interval
+qmax = getindex.(res,2)
+
+# Plotting the interval and the gaugings 
+obs = layer(data, x=:Level, y=:Discharge, Geom.point)
+model = layer(x=h₀, y=q̂₀, Geom.line,
+    ymin = qmin, ymax = qmax, Geom.ribbon,
+    Theme(default_color=colorant"red"))
+
+plot(obs, model)
+```   
