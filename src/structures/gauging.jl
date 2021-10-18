@@ -13,8 +13,6 @@ Gauging(level::Real, discharge::Real) = Gauging(promote(level, discharge)...)
 Gauging(level::Integer, discharge::Integer,) = Gauging(float(level), float(discharge))
 Gauging() = Gauging(0.0, 0.0)
 
-Base.Broadcast.broadcastable(obj::Gauging) = Ref(obj)
-
 
 """
     bootstrap(G::Vector{Gauging})
