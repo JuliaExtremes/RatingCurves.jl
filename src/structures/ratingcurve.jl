@@ -118,7 +118,7 @@ end
 
 `1-α` confidence interval of the estimated discharge at level `h` with the rating curve `rc`.
 
-See also [`pintlog`](@ref)e
+See also [`pintlog`](@ref)
 
 ## Details
 
@@ -127,8 +127,12 @@ with the relative error of the discharge measurement `rtol`.
 
 ### Measurement error
 
-The discharge measurement uncertainty is assumed to be Gaussian. The relative error `rtol` is assumed to be ``1.96 \, τ`` where
-``τ^2`` is the variance of the Gaussian measurement error. Therefore, ``τ = \operatorname{rtol}/ 1.96``. 
+It is assumed that ``(q_i \pm \operatorname{rtol} \times q_i)`` contains the true discharge 95% of the time. Assuming a Gaussian distribution for the 
+discharge measurement, the discharge ``Q_i`` distribution is given as follows:
+
+`` Q_i \sim \mathcal{N} \left\{ q_i,  \left(\frac{\operatorname{rtol} q_i}{1.96}\right)^2 \right\}.``
+
+The discharge standard variation is therefore ``\tau_i = \frac{\operatorname{rtol} q_i}{1.96}.`` 
 
 ### Residual error
 
@@ -140,7 +144,16 @@ sum of squared residuals is defined as:
 
 The variance estimation of the log residuals are therefore:
 
-``σ̂² = \frac{1}{n-3} \operatorname{SSE}.``
+``σ̂ₑ² = \frac{1}{n-3} \operatorname{SSE}.``
+
+The linear regression prediction variance of the estimated discharge at level `h₀` is given by:
+
+``σ̂² = x₀^⊤ (X^\top X)^{-1} x₀``
+
+where ``x₀^⊤ = [1 \log (h₀ - b)]`` and $X$ is the structure matrix of the regression model.
+
+!!! note
+    The uncertainty on $b$ is neglected in this expression.
 
 ### Log discharge prediction error
 
@@ -161,27 +174,34 @@ function pint(rc::RatingCurve, level::Real, α::Real=0.05, rtol::Real=.05)
 end
 
 """
-    pintlog(rc::RatingCurve, level::Real, α::Real=0.05, rtol::Real=.05)
+    pintlog(rc::RatingCurve, h₀::Real, α::Real=0.05, rtol::Real=.05)
 
-`1-α` confidence interval of the estimated log discharge at level `h` with the rating curve `rc`.
+`1-α` confidence interval of the estimated log discharge at level `h₀` with the rating curve `rc`.
 
 ### Details
 
 `rtol` represents the relative uncertainty of the dishcarge so that the true discharge is included in the interval `q ± 1.96*rtol` 95% of the time
 """
-function pintlog(rc::RatingCurve, level::Real, α::Real=0.05, rtol::Real=.05)
+function pintlog(rc::RatingCurve, h₀::Real, α::Real=0.05, rtol::Real=.05)
     
     @assert 0<α<1
     @assert 0<rtol<1
-    @assert level>rc.b
+    @assert h₀>rc.b
     
-    # Rating curve variance in the log space
-    σ̂² = RatingCurves.var(rc)[]
+    # Residuals variance in the log space
+    σ̂ₑ² = RatingCurves.var(rc)[]
     
+    # Prediction variance given by the linear regression (uncertainty on b is not taken into account)
+    G = rc.gauging
+    x = log.(level.(rc.gauging) .- rc.b)
+    X = hcat(ones(length(x)), x)
+    x₀ = [1, log(h₀ - rc.b)]
+    σ̂² = σ̂ₑ²* x₀'/(X'X)*x₀
+
     # Relative discharge variance in the log space
     τ² = (rtol/1.96)^2
     
-    pd = Normal(logdischarge(rc, level), sqrt(σ̂² + τ²))
+    pd = Normal(logdischarge(rc, h₀), sqrt(σ̂² + τ²))
     
     lower = quantile(pd, α/2)
     upper = quantile(pd, 1-α/2)
