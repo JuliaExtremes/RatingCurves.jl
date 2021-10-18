@@ -88,6 +88,7 @@ The 95% confidence interval on the discharge estimation at $h_0 = 29$ can be obt
 ```@repl SainteAnne
 pint(rc, 29)
 ```
+For more details on how this uncerainty is estimated, see the description of [`pint`](@ref).
 
 The confidence interval for the whole range of the rating curve can be plotted as follows:
 ```@example SainteAnne
