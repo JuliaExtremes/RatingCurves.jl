@@ -21,18 +21,25 @@ plot(data, x=:Level, y=:Discharge, Geom.point)
 ## Construct the Gauging type
 
 It is possible to construct a [`Gauging`](@ref) type with a level and discharge couple:
-```@example SainteAnne
-h = data.level[1]
+```@repl SainteAnne
+h = data.Level[1]
 q = data.Discharge[1]
 
 G = Gauging(h,q)    
 ```
 
 The level and the discharge of the gauging `G` can be retrieved with [`level`](@ref) and [`discharge`](@ref) methods respectively:
-```@example SainteAnne
+```@replSainteAnne
 h = level(G)
 q = discharge(G)
-
-println(h,q)    
 ```
 
+The constructor can be broadcasted to obtain a vector of type [`Gauging`](@ref):
+```@repl SainteAnne
+G = Gauging.(data.Level, data.Discharge)
+```
+
+The [`level`](@ref) and [`discharge`](@ref) methods can also be broadcasted. For example:
+```@repl SainteAnne
+discharge.(G)
+```

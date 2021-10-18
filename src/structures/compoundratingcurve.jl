@@ -44,7 +44,7 @@ end
 
 Compound rating curve parameter confidence intervals of level `1-α` obtained by a bootstrap sample of size `nboot`.
 """
-function cint(crc::CompoundRatingCurve; nboot::Int=200, α::Real=.05)
+function cint(crc::CompoundRatingCurve; nboot::Int=100, α::Real=.05)
     
     k = Vector{Float64}(undef, nboot)
     

@@ -41,7 +41,7 @@ end
 
 Rating curve parameter confidence intervals of level `1-α` obtained by a bootstrap sample of size `nboot`.
 """
-function cint(rc::RatingCurve; nboot::Int=1000, α::Real=.05)
+function cint(rc::RatingCurve; nboot::Int=100, α::Real=.05)
     
     a = Vector{Float64}(undef, nboot)
     b = Vector{Float64}(undef, nboot)
@@ -113,14 +113,44 @@ function logdischarge(rc::RatingCurve, h::Real)
     
 end
 
-"""
+@doc raw"""
     pint(rc::RatingCurve, level::Real, α::Real=0.05, rtol::Real=.05)
 
-`1-α` Confidence interval of the estimated discharge at level `h` with the rating curve `rc`.
+`1-α` confidence interval of the estimated discharge at level `h` with the rating curve `rc`.
 
-### Details
+See also [`pintlog`](@ref), [`var`](@ref) and [`sse`](@ref)
 
-`rtol` represents the relative uncertainty of the dishcarge so that the true discharge is included in the interval `q ± 1.96*rtol` 95% of the time.
+## Details
+
+Estimate the `1-α` confidence interval of the estimated discharge corresponding to the rating curve `rc`at level `h` 
+with the relative error of the discharge measurement `rtol`.
+
+### Measurement error
+
+The discharge measurement uncertainty is assumed to be Gaussian. The relative error `rtol` is assumed to be ``1.96 \, τ`` where
+``τ^2`` is the variance of the Gaussian measurement error. Therefore, ``τ = \operatorname{rtol}/ 1.96``. 
+
+### Residual error
+
+The estimation error ``σ²`` corresponding to the point on the rating curve is estimated with the sum of squared residuals in the log space. 
+Let ``qᵢ`` be the observed discharge and ``q̂ᵢ`` be the corresponding discharge estimation. For the ``n>3`` gaugings, the 
+sum of squared residuals is defined as:
+
+``\operatorname{SSE} = \sum_{i=1}^n ( \log qᵢ - \log q̂ᵢ)^2.``
+
+The variance estimation of the log residuals are therefore:
+
+``σ̂² = \frac{1}{n-3} \operatorname{SSE}.``
+
+### Log discharge prediction error
+
+The log prediction variance is assumed to be the sum of the estimation variance and the discharge measurement variance in the log space.
+It is then assumed that the prediction error in the log space is Gaussian in order to compute the confidence interval bounds.
+
+### Discharge prediction error
+
+The confidence interval bounds in the original space are given by the exponential of the bounds in the log space.
+
 """
 function pint(rc::RatingCurve, level::Real, α::Real=0.05, rtol::Real=.05)
     
@@ -145,10 +175,10 @@ function pintlog(rc::RatingCurve, level::Real, α::Real=0.05, rtol::Real=.05)
     @assert 0<rtol<1
     @assert level>rc.b
     
-    # Rating curve error in log space
+    # Rating curve variance in the log space
     σ̂² = RatingCurves.var(rc)[]
     
-    # Relative discharge error in log space
+    # Relative discharge variance in the log space
     τ² = (rtol/1.96)^2
     
     pd = Normal(logdischarge(rc, level), sqrt(σ̂² + τ²))
