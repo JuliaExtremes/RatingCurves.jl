@@ -10,7 +10,8 @@ makedocs(sitename = "RatingCurves.jl",
        "index.md",
        "Tutorial" =>["Getting started" => "tutorial/index.md",
             "Data" => "tutorial/gauging.md",
-            "Rating curve fitting" => "tutorial/rcfit.md"],
+            "Rating curve fitting" => "tutorial/rcfit.md",
+            "Compound rating curve fitting" => "tutorial/crcfit.md"],
        "contributing.md",
        "functions.md"]
 )

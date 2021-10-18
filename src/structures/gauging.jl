@@ -183,7 +183,7 @@ function rcfit(G::Vector{Gauging})
     
     fobj(b) = sum( (y - logdischarge.(rcfit(G,b[]), h)).^2 )
 
-    res = optimize(fobj, [-Inf], [.99*minimum(h)], [rc₀.b])
+    res = optimize(fobj, [-Inf], [minimum(h)-1e-6], [rc₀.b])
     b = Optim.minimizer(res)[]
     
     rc = rcfit(G, b)
@@ -237,7 +237,7 @@ function rcfit(G::Vector{Gauging}, constraint::AbstractVector{<:Real})
     
     fobj(b) = sum( (y - logdischarge.(rcfit(G,b[],constraint), h)).^2 )
 
-    res = optimize(fobj, [-Inf], [.99*minimum(h)], [rc₀.b])
+    res = optimize(fobj, [-Inf], [minimum(h)-1e-6], [rc₀.b])
     b = Optim.minimizer(res)[]
     
     rc = rcfit(G, b, constraint)
@@ -286,7 +286,7 @@ Sort the gauging according to the level.
 
 ### Details
 
-Sort in ascending order if `rev=false` (option by default) and in descendinf order if `rev=true`.
+Sort in ascending order if `rev=false` (option by default) and in descending order if `rev=true`.
 """
 function sort(G::Vector{Gauging}; rev::Bool=false)
    

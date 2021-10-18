@@ -80,7 +80,7 @@ println(string("c ∈ [", res[1,3]," , ", res[2,3]," ]"))
 ```
 
 !!! note
-    In the bootstrap resampling procedure, the gauging with the minimum level is always selected so that the bootstrap rating curves are always defined on the original gauging range.
+    In the bootstrap resampling procedure, the gauging with the minimum level is always selected to ensure that the bootstrap rating curves are always defined on the original gauging level range.
 
 ## Discharge uncertainty
 
