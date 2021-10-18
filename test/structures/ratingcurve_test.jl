@@ -19,10 +19,27 @@
     rc = RatingCurve(G, 1, 2.0, 3.0)
     @test typeof(rc.a) == Float64
 
+    # Test empty rating curve construction
+    rc = RatingCurve() 
+    @test rc.gauging == Gauging[]
+    @test rc.a ≈ 0.0 atol = sqrt(eps())
+    @test rc.b ≈ 0.0 atol = sqrt(eps())
+    @test rc.c ≈ 0.0 atol = sqrt(eps())
+
 end
 
 @testset "bic RatingCurve" begin
-    #TODO
+    h = exp.([1/5, 1/4, 1/2, 1/2])
+    q = exp.([8/5, 7/4, 5/2, 3])
+    G = Gauging.(h,q)
+
+    n = length(G)
+
+    rc = RatingCurve(G, exp(1), 0, 3)
+
+    res = bic(rc)
+
+    @test res ≈ n*log(1/4) + 3*log(n) atol = sqrt(eps())
 end
 
 @testset "cint RatingCurve" begin
@@ -68,7 +85,7 @@ end
 end
 
 @testset "var of RatingCurve" begin
-    h = exp.([1/5, 1/4, 1/2, 1/2]) # First three points on the curve
+    h = exp.([1/5, 1/4, 1/2, 1/2]) # First three points are on the curve
     q = exp.([8/5, 7/4, 5/2, 3])
 
     G = Gauging.(h,q)
