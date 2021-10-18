@@ -11,7 +11,7 @@
 
 The power-law level-discharge relationship is given as folows:
 ```math
-q = a \, (h-b)^c;
+q = a \, (h-b)^c.
 ```
 
 The compound power-law level-discharge relationship for two segments is given as folows:

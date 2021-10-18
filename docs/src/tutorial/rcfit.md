@@ -29,7 +29,7 @@ With a set of $n \geq 3$ gaugings $\{(h_i,q_i), 1 \leq i \leq n\}$, the optimal 
 f_{obj}(a,b,c) = \sum_{i=1}^n \left\{ \log q_i - \log a - c \log (h_i-b) \right\}^2.
 ```
 
-Conditional on $b$, the parameters $a$ and $c$ that minimize the sum of squares are the estimated linear regression coefficients. The search for the optimal $\left( -\infty < b < \min(h_i) \right)$ is performed with the [limited-memory Broyden–Fletcher–Goldfarb–Shanno algorithm](https://julianlsolvers.github.io/Optim.jl/stable/#algo/lbfgs/) (L-BFGS). For each of the candidates for $b$, the optimal values of $a$ and $c$ are calculated explicitly with the normal equations in regression.
+Conditional on $b$, the parameters $a$ and $c$ that minimize the sum of squares are the estimated linear regression coefficients. The search for the optimal $\left( -\infty < b < \min(h_i) \right)$ is performed with the [limited-memory Broyden–Fletcher–Goldfarb–Shanno algorithm](https://julianlsolvers.github.io/Optim.jl/stable/#algo/lbfgs/) (L-BFGS). For each of the candidates for $b$, the optimal values of $a$ and $c$ are calculated explicitly with the normal equations in linear regression.
 
 ## Fit on gaugings
 
@@ -90,7 +90,7 @@ pint(rc, 29)
 ```
 For more details on how this uncerainty is estimated, see the description of [`pint`](@ref).
 
-The confidence interval for the whole range of the rating curve can be plotted as follows:
+The confidence interval for the whole level range of the rating curve can be plotted as follows:
 ```@example SainteAnne
 h₀ = range(minimum(data.Level), stop=32, length=100)
 
@@ -99,6 +99,53 @@ q̂₀ = discharge.(rc, h₀)
 
 # 95% confidence intervals of each discharge estimation
 res = pint.(rc, h₀)
+
+# Lower bound of interval
+qmin = getindex.(res,1)
+
+# Upper bound of interval
+qmax = getindex.(res,2)
+
+# Plotting the interval and the gaugings 
+obs = layer(data, x=:Level, y=:Discharge, Geom.point)
+model = layer(x=h₀, y=q̂₀, Geom.line,
+    ymin = qmin, ymax = qmax, Geom.ribbon,
+    Theme(default_color=colorant"red"))
+
+plot(obs, model)
+```
+
+## Constrained rating curve fit
+
+The rating curve can also be fit to the gaugings by requiring the curve to pass through a particular point. The curve obtained is the one that minimizes the sum of the squared errors among the curves that pass through the given point.
+
+For example, if one wants the curve to pass through the last gauging, this constraint can be added by using [`rcfit`](@ref) with the contraint arguement:
+```@example SainteAnne
+# Extract the level and discharge of the last gauging
+Gₘ = maximum(G)
+h̃ = level(Gₘ)
+q̃ = discharge(Gₘ)
+
+# Fit the constrained curve
+constrained_rc = rcfit(G, [h̃, q̃])
+```
+
+The constrained curve can be plotted in the usual way:
+```@example SainteAnne
+obs = layer(data, x=:Level, y=:Discharge, Geom.point)
+model = layer(h->discharge(constrained_rc, h), 26, 32, Theme(default_color=colorant"red"))
+plot(obs, model)
+```
+
+The confidence interval on the discharge estimations can also be obtained in the usual way:
+```@example SainteAnne
+h₀ = range(minimum(data.Level), stop=32, length=100)
+
+# Discharge estimation for each level 
+q̂₀ = discharge.(constrained_rc, h₀)
+
+# 95% confidence intervals of each discharge estimation
+res = pint.(constrained_rc, h₀)
 
 # Lower bound of interval
 qmin = getindex.(res,1)
