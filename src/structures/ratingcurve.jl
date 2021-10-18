@@ -165,9 +165,9 @@ It is then assumed that the prediction error in the log space is Gaussian in ord
 The confidence interval bounds in the original space are given by the exponential of the bounds in the log space.
 
 """
-function pint(rc::RatingCurve, level::Real, α::Real=0.05, rtol::Real=.05)
+function pint(rc::RatingCurve, h₀::Real, α::Real=0.05, rtol::Real=.05)
     
-    res = pintlog(rc, level, α, rtol)
+    res = pintlog(rc, h₀, α, rtol)
     
     return exp.(res)
     
@@ -196,7 +196,7 @@ function pintlog(rc::RatingCurve, h₀::Real, α::Real=0.05, rtol::Real=.05)
     x = log.(level.(rc.gauging) .- rc.b)
     X = hcat(ones(length(x)), x)
     x₀ = [1, log(h₀ - rc.b)]
-    σ̂² = σ̂ₑ²* x₀'/(X'X)*x₀
+    σ̂² = σ̂ₑ² * (1+x₀'/(X'X)*x₀)
 
     # Relative discharge variance in the log space
     τ² = (rtol/1.96)^2
