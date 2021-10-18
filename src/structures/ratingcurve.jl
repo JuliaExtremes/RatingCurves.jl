@@ -118,7 +118,7 @@ end
 
 `1-α` confidence interval of the estimated discharge at level `h` with the rating curve `rc`.
 
-See also [`pintlog`](@ref), [`var`](@ref) and [`sse`](@ref)
+See also [`pintlog`](@ref)e
 
 ## Details
 

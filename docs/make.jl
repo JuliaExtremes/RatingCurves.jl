@@ -12,9 +12,7 @@ makedocs(sitename = "RatingCurves.jl",
             "Data" => "tutorial/gauging.md",
             "Rating curve fitting" => "tutorial/rcfit.md"],
        "contributing.md",
-       "functions.md"
-       ]
-
+       "functions.md"]
 )
 
 # if CI
