@@ -13,8 +13,6 @@ Gauging(level::Real, discharge::Real) = Gauging(promote(level, discharge)...)
 Gauging(level::Integer, discharge::Integer,) = Gauging(float(level), float(discharge))
 Gauging() = Gauging(0.0, 0.0)
 
-Base.Broadcast.broadcastable(obj::Gauging) = Ref(obj)
-
 
 """
     bootstrap(G::Vector{Gauging})
@@ -52,7 +50,7 @@ function crcfit(G::Vector{Gauging})
     hs = sort(unique(h))
     
     fobj(k) = sum( (log.(q) - logdischarge.(crcfit(G,k), h)).^2 )
-    res = optimize(fobj, hs[3]+1e-6, hs[end-2]-1e-6)
+    res = optimize(fobj, hs[3]+1e-2, hs[end-2]-1e-2)
     k = Optim.minimizer(res)
     
     crc = crcfit(G, k)
@@ -183,7 +181,7 @@ function rcfit(G::Vector{Gauging})
     
     fobj(b) = sum( (y - logdischarge.(rcfit(G,b[]), h)).^2 )
 
-    res = optimize(fobj, [-Inf], [minimum(h)-1e-6], [rc₀.b])
+    res = optimize(fobj, [-Inf], [minimum(h)-1e-2], [rc₀.b])
     b = Optim.minimizer(res)[]
     
     rc = rcfit(G, b)
@@ -202,7 +200,7 @@ function rcfit(G::Vector{Gauging}, b::Real)
     h = level.(G)
     q = discharge.(G)
     
-    @assert b < minimum(h) 
+    # @assert b < minimum(h) 
     
     x = log.(h .- b)
     y = log.(q)
@@ -237,7 +235,7 @@ function rcfit(G::Vector{Gauging}, constraint::AbstractVector{<:Real})
     
     fobj(b) = sum( (y - logdischarge.(rcfit(G,b[],constraint), h)).^2 )
 
-    res = optimize(fobj, [-Inf], [minimum(h)-1e-6], [rc₀.b])
+    res = optimize(fobj, [-Inf], [minimum(h)-1e-2], [rc₀.b])
     b = Optim.minimizer(res)[]
     
     rc = rcfit(G, b, constraint)
@@ -256,7 +254,7 @@ function rcfit(G::Vector{Gauging}, b::Real, constraint::AbstractVector{<:Real})
     h = level.(G)
     q = discharge.(G)
     
-    @assert b < minimum(h) 
+    # @assert b <= minimum(h)
     
     h̃ = constraint[1]
     q̃ = constraint[2]

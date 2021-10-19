@@ -1,7 +1,7 @@
 name = "RatingCurves"
 uuid = "e9e3b3e0-5095-4984-97e8-7ac0126a89f0"
 authors = ["Jonathan Jalbert"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"

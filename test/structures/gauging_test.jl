@@ -15,6 +15,11 @@
     @test typeof(G.level) == Float64
     @test typeof(G.discharge) == Float64
 
+    # Test the empty gauing construction
+    G = Gauging()
+    @test G.level ≈ 0.0 atol = sqrt(eps())
+    @test G.discharge ≈ 0.0 atol = sqrt(eps())
+
     # Test the broadcast
     G = Gauging.([1,2],[3,4])
     @test G[2].level ≈ 2
