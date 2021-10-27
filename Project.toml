@@ -1,7 +1,7 @@
 name = "RatingCurves"
 uuid = "e9e3b3e0-5095-4984-97e8-7ac0126a89f0"
 authors = ["Jonathan Jalbert"]
-version = "0.1.1"
+version = "0.1.2"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
@@ -14,10 +14,10 @@ StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 
 [compat]
 CSV = "^0.7"
-DataFrames = "^0.21"
-Distributions = "^0.23"
-Optim = "^0.22"
-StatsBase = "^0.33"
+DataFrames = "^1"
+Distributions = "^0"
+Optim = "^1"
+StatsBase = "^0"
 julia = "1"
 
 [extras]
